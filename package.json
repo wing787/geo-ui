@@ -1,20 +1,26 @@
 {
   "name": "@wing787/geo-ui",
   "private": true,
-  "version": "0.1.0",
-  "description": "Shared design system: tokens for the portfolio and geospatial apps",
+  "version": "0.2.0",
+  "description": "Shared design system: tokens and data palettes for the portfolio and geospatial apps",
   "type": "module",
   "license": "MIT",
   "files": [
     "tokens.css",
     "base.css",
+    "src",
     "docs"
   ],
   "exports": {
     "./tokens.css": "./tokens.css",
-    "./base.css": "./base.css"
+    "./base.css": "./base.css",
+    "./palettes": "./src/palettes.ts"
   },
   "sideEffects": [
     "*.css"
-  ]
+  ],
+  "scripts": {
+    "check": "node --experimental-strip-types scripts/check-tokens.mjs",
+    "test": "node --experimental-strip-types --test test/palettes.test.ts"
+  }
 }

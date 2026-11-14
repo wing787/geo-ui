@@ -1,24 +1,27 @@
 /*
  * geo-ui tokens — 正本
  * フレームワーク非依存の CSS カスタムプロパティ。
- * アプリ側はセマンティック層（--surface, --text-primary 等）のみ参照すること。
- * プリミティブ層（--c-*, --data-* の生値）を直接使わない。
  *
- * light = :root(既定)  /  dark = [data-theme="dark"]
- * 地図アプリはルートまたは地図コンテナに data-theme="dark" を付ける。
- * ポートフォリオ・読み物は付けない（light のまま）。
+ * 層:
+ *   色のプリミティブ（--c-*）      生の値。アプリから直接使わない
+ *   スケール（--text-* --space-* 等） 色以外の寸法。アプリから直接使ってよい
+ *   データ色（--data-*）            凡例などデータ表現にだけ使う。UI の装飾に使わない
+ *   セマンティック（--surface 等）  UI の色はここだけを参照する
+ *
+ * テーマ: light = 既定 / dark = [data-theme="dark"]
+ *   地図アプリはルートまたは地図コンテナに data-theme="dark" を付ける。
+ *   dark の中で一部を light に戻すときは data-theme="light" を付ける。
+ *   色は light-dark() で定義し、color-scheme で切り替わる（docs/adr/0002）。
  *
  * このファイルは変数の定義だけを持つ（要素へのスタイルは当てない）。
- * body の既定スタイルが欲しい場合は base.css を別途 import する。
+ * body などの既定スタイルが欲しい場合は base.css を別途 import する。
  *
- * コントラストの基準（docs/DESIGN-SYSTEM.md §9）:
- *   --text-*         は --page / --surface / --surface-2 の全てに対して 4.5:1 以上
- *   --border-control は同じ3面に対して 3:1 以上
- * 色を変えたら必ず測り直すこと。
+ * コントラストの基準（docs/DESIGN-SYSTEM.md §2）は `npm run check` で検証する。
+ * 色を変えたら必ず実行すること。
  */
 
 /* ============================================================
- * プリミティブ層（生の値。直接使わない）
+ * 色のプリミティブ（生の値。直接使わない）
  * ============================================================ */
 :root {
   /* ニュートラル（暖チャコール〜紙白） */
@@ -50,10 +53,23 @@
   --c-slate:  #2f4858; /* light の差し色 */
   --c-teal:   #2dd4bf; /* dark の差し色 */
 
-  /* タイポ */
-  --font-sans:  "IBM Plex Sans", system-ui, sans-serif;
-  --font-mono:  "IBM Plex Mono", ui-monospace, monospace;
-  --font-serif: "IBM Plex Serif", Georgia, serif;
+  /* 状態（light 用 / dark 用） */
+  --c-red:      #b3261e;
+  --c-amber:    #8a5a00;
+  --c-green:    #1f6f43;
+  --c-dk-red:   #ff7b72;
+  --c-dk-amber: #e3b341;
+  --c-dk-green: #56d364;
+}
+
+/* ============================================================
+ * スケール（色以外。アプリから直接使ってよい）
+ * ============================================================ */
+:root {
+  /* タイポ。欧文は Plex、和文は Plex Sans JP に落とす */
+  --font-sans:  "IBM Plex Sans", "IBM Plex Sans JP", system-ui, sans-serif;
+  --font-mono:  "IBM Plex Mono", "IBM Plex Sans JP", ui-monospace, monospace;
+  --font-serif: "IBM Plex Serif", "IBM Plex Sans JP", Georgia, serif;
 
   --text-xs:  12px;
   --text-sm:  13px;
@@ -80,77 +96,103 @@
   --radius-card: 12px;
   --border-hairline: 0.5px;
   --border-solid:    1px;
+
+  /* フォーカスリング */
+  --focus-ring-width:  2px;
+  --focus-ring-offset: 2px;
+
+  /* 重なり順（アプリ全体。地図コンテナの内側は別の重なりに閉じる） */
+  --z-base:        0;
+  --z-map-control: 10; /* 地図上のボタン・凡例・スケール */
+  --z-panel:       20; /* サイドパネル・ドロワー */
+  --z-popup:       30; /* ポップアップ・ツールチップ・メニュー */
+  --z-modal:       40;
+  --z-toast:       50;
+
+  /* 動き */
+  --duration-fast: 120ms; /* ホバー・押下 */
+  --duration-base: 200ms; /* 開閉・切替 */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 0ms;
+    --duration-base: 0ms;
+  }
 }
 
 /* ============================================================
- * データ可視化パレット（CVD対応・UIとは別枠）
- * 直接ではなく、可視化ライブラリの設定にこの値を渡す想定。
+ * データ可視化パレット（UIとは別枠）
+ * 正本は src/palettes.ts と同じ値（npm run check で一致を検証）。
+ * 地図レイヤ（MapLibre）は CSS 変数を読めないので、そちらは palettes.ts を使う。
+ * ここは HTML の凡例など、CSS だけで色を当てたい場面用。
  * ============================================================ */
 :root {
-  /* sequential: viridis（連続値：降水強度・標高・密度など） */
+  /* sequential: viridis の5停止（連続値：降水強度・標高・密度など） */
   --data-seq-0: #440154;
   --data-seq-1: #3b528b;
-  --data-seq-2: #21918c;
-  --data-seq-3: #5ec962;
+  --data-seq-2: #21908c;
+  --data-seq-3: #5dc863;
   --data-seq-4: #fde725;
 
-  /* categorical: CVDセーフ（分類・レイヤ種別など。虹順で使わない） */
-  --data-cat-1: #1b9e77;
-  --data-cat-2: #d95f02;
-  --data-cat-3: #7570b3;
-  --data-cat-4: #e7298a;
-  --data-cat-5: #66a61e;
-  --data-cat-6: #e6ab02;
+  /* categorical: 5色まで。背景ごとに別の組（どちらも色覚シミュレーションで検証済み） */
+  --data-cat-1: light-dark(#0072b2, #56b4e9);
+  --data-cat-2: light-dark(#d55e00, #e69f00);
+  --data-cat-3: light-dark(#009e73, #009e73);
+  --data-cat-4: light-dark(#332288, #f0e442);
+  --data-cat-5: light-dark(#882255, #d55e00);
 
-  /* diverging: 中心からの偏差（平年差・増減など） */
-  --data-div-neg: #2166ac;
-  --data-div-mid: #f7f7f7;
-  --data-div-pos: #b2182b;
+  /* diverging: 中心からの偏差（平年差・増減など）。中点は背景に沈む色 */
+  --data-div-neg: light-dark(#2166ac, #67a9cf);
+  --data-div-mid: light-dark(#f7f7f7, #30363d);
+  --data-div-pos: light-dark(#b2182b, #ef8a62);
 }
 
 /* ============================================================
- * セマンティック層 — light（既定）
- * アプリはここだけを参照する。
+ * セマンティック層（UI の色はここだけを参照する）
+ * light-dark(light の値, dark の値)
  * ============================================================ */
 :root {
-  --page:            var(--c-paper);
-  --surface:         var(--c-white);
-  --surface-2:       var(--c-ink-100); /* surface と区別したい二次面。light では一段暗い */
+  color-scheme: light;
 
-  --text-primary:    var(--c-ink-800);
-  --text-secondary:  var(--c-ink-600);
-  --text-muted:      var(--c-ink-500);
+  --page:            light-dark(var(--c-paper), var(--c-dk-bg));
+  --surface:         light-dark(var(--c-white), var(--c-dk-surf-1));
+  --surface-2:       light-dark(var(--c-ink-100), var(--c-dk-surf-2)); /* 二次面。light は一段暗く、dark は一段明るい */
 
-  --border:          var(--c-ink-200); /* 装飾の境界（カード・区切り） */
-  --border-strong:   var(--c-ink-300);
-  --border-control:  var(--c-ink-450); /* 入力欄など、枠が唯一の手がかりになる部品 */
-  --divider:         var(--c-ink-150);
+  --text-primary:    light-dark(var(--c-ink-800), var(--c-dk-text-1));
+  --text-secondary:  light-dark(var(--c-ink-600), var(--c-dk-text-2));
+  --text-muted:      light-dark(var(--c-ink-500), var(--c-dk-text-3));
 
-  --accent:          var(--c-slate);
-  --accent-text:     var(--c-white);
+  --border:          light-dark(var(--c-ink-200), var(--c-dk-border)); /* 装飾の境界（カード・区切り） */
+  --border-strong:   light-dark(var(--c-ink-300), var(--c-dk-border-strong));
+  --border-control:  light-dark(var(--c-ink-450), var(--c-dk-border-control)); /* 枠が唯一の手がかりになる部品 */
+  --divider:         light-dark(var(--c-ink-150), var(--c-dk-border));
+
+  --accent:          light-dark(var(--c-slate), var(--c-teal));
+  --accent-text:     light-dark(var(--c-white), var(--c-dk-bg));
+
+  --focus-ring:      var(--accent);
+
+  /* 状態。色だけで伝えない（アイコンか文言を必ず添える） */
+  --status-error:    light-dark(var(--c-red), var(--c-dk-red));
+  --status-warning:  light-dark(var(--c-amber), var(--c-dk-amber));
+  --status-success:  light-dark(var(--c-green), var(--c-dk-green));
+
+  /* 地図の上に浮く面（凡例・パネル・ポップアップ）。影を使わないので不透明＋1px の枠で分ける */
+  --map-overlay-surface:      var(--surface);
+  --map-overlay-border:       var(--border-strong);
+  --map-overlay-border-width: var(--border-solid);
 
   --border-width:    var(--border-hairline);
 }
 
-/* ============================================================
- * セマンティック層 — dark（地図アプリの中身）
- * ============================================================ */
 [data-theme="dark"] {
-  --page:            var(--c-dk-bg);
-  --surface:         var(--c-dk-surf-1);
-  --surface-2:       var(--c-dk-surf-2); /* dark では一段明るい */
+  color-scheme: dark;
+  --border-width: var(--border-solid);
+}
 
-  --text-primary:    var(--c-dk-text-1);
-  --text-secondary:  var(--c-dk-text-2);
-  --text-muted:      var(--c-dk-text-3);
-
-  --border:          var(--c-dk-border);
-  --border-strong:   var(--c-dk-border-strong);
-  --border-control:  var(--c-dk-border-control);
-  --divider:         var(--c-dk-border);
-
-  --accent:          var(--c-teal);
-  --accent-text:     var(--c-dk-bg);
-
-  --border-width:    var(--border-solid);
+[data-theme="light"] {
+  color-scheme: light;
+  --border-width: var(--border-hairline);
 }
