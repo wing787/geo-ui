@@ -1,0 +1,13 @@
+/*
+ * design-system base — 任意のベーススタイル
+ * tokens.css の後に import する。要素へ直接スタイルを当てるので、
+ * 既存のグローバルスタイルを持つアプリは読み込まなくてよい。
+ */
+body {
+  background: var(--page);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: 1.65;
+}

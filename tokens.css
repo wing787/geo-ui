@@ -1,0 +1,156 @@
+/*
+ * design-system tokens — 正本
+ * フレームワーク非依存の CSS カスタムプロパティ。
+ * アプリ側はセマンティック層（--surface, --text-primary 等）のみ参照すること。
+ * プリミティブ層（--c-*, --data-* の生値）を直接使わない。
+ *
+ * light = :root(既定)  /  dark = [data-theme="dark"]
+ * 地図アプリはルートまたは地図コンテナに data-theme="dark" を付ける。
+ * ポートフォリオ・読み物は付けない（light のまま）。
+ *
+ * このファイルは変数の定義だけを持つ（要素へのスタイルは当てない）。
+ * body の既定スタイルが欲しい場合は base.css を別途 import する。
+ *
+ * コントラストの基準（docs/DESIGN-SYSTEM.md §9）:
+ *   --text-*         は --page / --surface / --surface-2 の全てに対して 4.5:1 以上
+ *   --border-control は同じ3面に対して 3:1 以上
+ * 色を変えたら必ず測り直すこと。
+ */
+
+/* ============================================================
+ * プリミティブ層（生の値。直接使わない）
+ * ============================================================ */
+:root {
+  /* ニュートラル（暖チャコール〜紙白） */
+  --c-ink-900: #16130f;
+  --c-ink-800: #1a1a17;
+  --c-ink-600: #52514b;
+  --c-ink-500: #6e6c64;
+  --c-ink-450: #8a887e;
+  --c-ink-400: #a3a196; /* 文字には使わない（紙白に対して 2.5:1） */
+  --c-ink-300: #cfcdc4;
+  --c-ink-200: #e6e4dd;
+  --c-ink-150: #ecebe4;
+  --c-ink-100: #f3f2ec;
+  --c-paper:   #faf9f6;
+  --c-white:   #ffffff;
+
+  /* ダーク面（GitHub系の近黒） */
+  --c-dk-bg:      #0d1117;
+  --c-dk-surf-1:  #161b22;
+  --c-dk-surf-2:  #21262d;
+  --c-dk-border:         #262c36;
+  --c-dk-border-strong:  #363c46;
+  --c-dk-border-control: #6e7681;
+  --c-dk-text-1:  #e6edf3;
+  --c-dk-text-2:  #a9b1ba;
+  --c-dk-text-3:  #8b949e;
+
+  /* アクセント */
+  --c-slate:  #2f4858; /* light の差し色 */
+  --c-teal:   #2dd4bf; /* dark の差し色 */
+
+  /* タイポ */
+  --font-sans:  "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono:  "IBM Plex Mono", ui-monospace, monospace;
+  --font-serif: "IBM Plex Serif", Georgia, serif;
+
+  --text-xs:  12px;
+  --text-sm:  13px;
+  --text-md:  14px;
+  --text-base:16px;
+  --text-lg:  18px;
+  --text-xl:  22px;
+
+  --weight-regular: 400;
+  --weight-medium:  500;
+
+  /* スペーシング（4px基準） */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+
+  /* 形状 */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-card: 12px;
+  --border-hairline: 0.5px;
+  --border-solid:    1px;
+}
+
+/* ============================================================
+ * データ可視化パレット（CVD対応・UIとは別枠）
+ * 直接ではなく、可視化ライブラリの設定にこの値を渡す想定。
+ * ============================================================ */
+:root {
+  /* sequential: viridis（連続値：降水強度・標高・密度など） */
+  --data-seq-0: #440154;
+  --data-seq-1: #3b528b;
+  --data-seq-2: #21918c;
+  --data-seq-3: #5ec962;
+  --data-seq-4: #fde725;
+
+  /* categorical: CVDセーフ（分類・レイヤ種別など。虹順で使わない） */
+  --data-cat-1: #1b9e77;
+  --data-cat-2: #d95f02;
+  --data-cat-3: #7570b3;
+  --data-cat-4: #e7298a;
+  --data-cat-5: #66a61e;
+  --data-cat-6: #e6ab02;
+
+  /* diverging: 中心からの偏差（平年差・増減など） */
+  --data-div-neg: #2166ac;
+  --data-div-mid: #f7f7f7;
+  --data-div-pos: #b2182b;
+}
+
+/* ============================================================
+ * セマンティック層 — light（既定）
+ * アプリはここだけを参照する。
+ * ============================================================ */
+:root {
+  --page:            var(--c-paper);
+  --surface:         var(--c-white);
+  --surface-2:       var(--c-ink-100); /* surface と区別したい二次面。light では一段暗い */
+
+  --text-primary:    var(--c-ink-800);
+  --text-secondary:  var(--c-ink-600);
+  --text-muted:      var(--c-ink-500);
+
+  --border:          var(--c-ink-200); /* 装飾の境界（カード・区切り） */
+  --border-strong:   var(--c-ink-300);
+  --border-control:  var(--c-ink-450); /* 入力欄など、枠が唯一の手がかりになる部品 */
+  --divider:         var(--c-ink-150);
+
+  --accent:          var(--c-slate);
+  --accent-text:     var(--c-white);
+
+  --border-width:    var(--border-hairline);
+}
+
+/* ============================================================
+ * セマンティック層 — dark（地図アプリの中身）
+ * ============================================================ */
+[data-theme="dark"] {
+  --page:            var(--c-dk-bg);
+  --surface:         var(--c-dk-surf-1);
+  --surface-2:       var(--c-dk-surf-2); /* dark では一段明るい */
+
+  --text-primary:    var(--c-dk-text-1);
+  --text-secondary:  var(--c-dk-text-2);
+  --text-muted:      var(--c-dk-text-3);
+
+  --border:          var(--c-dk-border);
+  --border-strong:   var(--c-dk-border-strong);
+  --border-control:  var(--c-dk-border-control);
+  --divider:         var(--c-dk-border);
+
+  --accent:          var(--c-teal);
+  --accent-text:     var(--c-dk-bg);
+
+  --border-width:    var(--border-solid);
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@wing787/ui",
+  "version": "0.1.0",
+  "description": "Shared design system: tokens for the portfolio and geospatial apps",
+  "type": "module",
+  "license": "MIT",
+  "files": [
+    "tokens.css",
+    "base.css",
+    "docs"
+  ],
+  "exports": {
+    "./tokens.css": "./tokens.css",
+    "./base.css": "./base.css"
+  },
+  "sideEffects": [
+    "*.css"
+  ]
+}
