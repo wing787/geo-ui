@@ -7,11 +7,14 @@
 
 ## 使い方
 
-git 依存としてインストールする（npm には公開しない）。
+git 依存としてインストールする（npm には公開しない）。`#main` ではなくタグを指定する。
 
 ```sh
-npm install github:wing787/geo-ui#main
+npm install github:wing787/geo-ui#v0.1.0
 ```
+
+ロックファイルをコミットし、CI では `npm ci` を使う（解決されたコミットが固定される）。
+更新するときはタグを新しいものに書き換える。
 
 ```css
 @import "@wing787/geo-ui/tokens.css"; /* 変数の定義のみ */
