@@ -1,7 +1,7 @@
 # geo-ui
 
 ポートフォリオサイトと地理空間アプリが共有するデザインシステム。
-リポジトリ名は `geo-ui`、パッケージ名は `@wing787/ui`。
+パッケージ名は `@wing787/geo-ui`。npm には同名の無関係なパッケージ `geo-ui` があるため、スコープなしの名前ではインストールしない。
 
 現在配布しているのはトークン（CSS カスタムプロパティ）のみ。React コンポーネントは未実装。
 
@@ -14,8 +14,8 @@ npm install github:wing787/geo-ui#main
 ```
 
 ```css
-@import "@wing787/ui/tokens.css"; /* 変数の定義のみ */
-@import "@wing787/ui/base.css";   /* 任意。body の既定スタイル */
+@import "@wing787/geo-ui/tokens.css"; /* 変数の定義のみ */
+@import "@wing787/geo-ui/base.css";   /* 任意。body の既定スタイル */
 ```
 
 アプリ側はセマンティック層の変数だけを参照する。

@@ -1,5 +1,5 @@
 /*
- * design-system tokens — 正本
+ * geo-ui tokens — 正本
  * フレームワーク非依存の CSS カスタムプロパティ。
  * アプリ側はセマンティック層（--surface, --text-primary 等）のみ参照すること。
  * プリミティブ層（--c-*, --data-* の生値）を直接使わない。

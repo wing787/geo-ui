@@ -1,5 +1,6 @@
 {
-  "name": "@wing787/ui",
+  "name": "@wing787/geo-ui",
+  "private": true,
   "version": "0.1.0",
   "description": "Shared design system: tokens for the portfolio and geospatial apps",
   "type": "module",
