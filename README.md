@@ -36,4 +36,5 @@ dark にするには、ルートまたは地図コンテナに `data-theme="dark
 ## 文書
 
 - [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md) — 見た目の仕様の正本
+- [docs/adr/](docs/adr/) — 設計判断の記録（配布方式など）
 - [CLAUDE.md](CLAUDE.md) — このリポジトリを変更するときのルール
