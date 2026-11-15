@@ -66,6 +66,7 @@ Next.js は `next.config` の `transpilePackages` に `@wing787/geo-ui` を足�
 ```sh
 npm run check   # コントラスト基準と、tokens.css / palettes.ts の一致を検証
 npm test        # palettes のテスト
+npm run preview # 見た目の確認用ページ preview.html を生成（ブラウザで開く。コミットしない）
 ```
 
 依存パッケージは無い。Node.js 22.6 以降が要る（TypeScript を直接実行するため）。

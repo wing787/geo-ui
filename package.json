@@ -21,6 +21,7 @@
   ],
   "scripts": {
     "check": "node --experimental-strip-types scripts/check-tokens.mjs",
+    "preview": "node --experimental-strip-types scripts/build-preview.mjs",
     "test": "node --experimental-strip-types --test test/palettes.test.ts"
   }
 }
