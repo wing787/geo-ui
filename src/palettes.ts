@@ -91,7 +91,8 @@ export const image = {
  */
 export const convention = {
   /**
-   * 気象庁の降水ナウキャスト。8階級。
+   * 気象庁の降水ナウキャスト。8階級。値は降水ナウキャストの凡例のもの。
+   * 黄色は凡例が (255,245,0)、気象庁の配色の指針（表2-1）が (250,245,0) で、わずかに違う。凡例に合わせている。
    * 暗い背景では最初の階級を描かない。`jmaRainFor(theme)` を使うこと。
    */
   jmaRain: {
@@ -133,9 +134,14 @@ export const optional = {
   ],
 } as const satisfies Record<string, readonly Hex[]>;
 
-/** 地図の出典欄に書く文。表示が必要なものだけ。 */
+/**
+ * 地図の出典欄に書く文。表示が必要なものだけ。条件は THIRD_PARTY_NOTICES.md を参照。
+ * 気象庁の利用規約は、出典に URL を添えることと、加工した場合にその旨を書くことを求めている。
+ */
 export const attribution = {
-  jma: "配色の出典：気象庁ホームページ",
+  jma: "配色の出典：気象庁ホームページ（https://www.jma.go.jp/jma/kishou/info/colorguide/HPColorGuide_202007.pdf）",
+  /** `jmaRainFor("dark")` を使った地図に、`jma` とあわせて書く。 */
+  jmaRainDarkEdit: "1 mm/h 未満の階級は表示していない（加工して作成）",
   hypsometric: "配色：GeoPalettes（Dominic Royé、CC BY 4.0）",
 } as const;
 

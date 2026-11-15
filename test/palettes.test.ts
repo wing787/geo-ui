@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import {
+  attribution,
   categorical,
   classIndex,
   colorStops,
@@ -63,6 +64,11 @@ test("jmaRainFor drops the near-white first class on dark backgrounds only", () 
   assert.equal(dark.colors[0], "#a0d2ff");
   assert.equal(dark.colors.at(-1), "#b40068");
   assert.ok(!dark.colors.includes("#f2f2ff"));
+});
+
+test("JMA attribution follows the form the JMA terms ask for", () => {
+  assert.match(attribution.jma, /出典：気象庁ホームページ（https:\/\/www\.jma\.go\.jp\//);
+  assert.match(attribution.jmaRainDarkEdit, /加工/);
 });
 
 test("classIndex puts boundary values in the upper class", () => {

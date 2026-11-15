@@ -13,7 +13,7 @@
 git 依存としてインストールする（npm には公開しない）。`#main` ではなくタグを指定する。
 
 ```sh
-npm install github:wing787/geo-ui#v0.3.0
+npm install github:wing787/geo-ui#v0.3.1
 ```
 
 ロックファイルをコミットし、CI では `npm ci` を使う（解決されたコミットが固定される）。
@@ -79,6 +79,7 @@ const fillColor = ["interpolate", ["linear"], ["get", "count"], ...stops.flat()]
 | `optional.turbo` | 既定にしない配色。値の大小を読ませる図には使わない |
 
 気象庁の配色と標高の段彩を使う地図には、出典を表示する（`attribution` に文がある）。
+配色ごとの出典と条件は [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) にまとめてある。
 
 `palettes` は TypeScript のソースのまま配布している。Vite はそのまま読める。
 Next.js は `next.config` の `transpilePackages` に `@wing787/geo-ui` を足す。
@@ -103,3 +104,7 @@ npm run preview # 見た目の確認用ページ preview.html を生成（ブラ
 - [docs/DESIGN-SYSTEM.md](docs/DESIGN-SYSTEM.md) — 見た目の仕様の正本
 - [docs/adr/](docs/adr/) — 設計判断の記録（配布方式、見た目の方向、配色の決め方など）
 - [CLAUDE.md](CLAUDE.md) — このリポジトリを変更するときのルール
+
+## ライセンス
+
+MIT（[LICENSE](LICENSE)）。取り込んだ配色にはそれぞれの条件がある（[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)）。
