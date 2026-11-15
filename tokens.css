@@ -8,6 +8,8 @@
  *   データ色（--data-*）            凡例などデータ表現にだけ使う。UI の装飾に使わない
  *   セマンティック（--surface 等）  UI の色はここだけを参照する
  *
+ * UI は無彩色。差し色は持たない（docs/DESIGN-SYSTEM.md §2、docs/adr/0003）。
+ *
  * テーマ: light = 既定 / dark = [data-theme="dark"]
  *   地図アプリはルートまたは地図コンテナに data-theme="dark" を付ける。
  *   dark の中で一部を light に戻すときは data-theme="light" を付ける。
@@ -22,38 +24,37 @@
 
 /* ============================================================
  * 色のプリミティブ（生の値。直接使わない）
+ * グレーは名前の末尾がそのまま値（--c-gray-f4 = #f4f4f4）。
  * ============================================================ */
 :root {
-  /* ニュートラル（暖チャコール〜紙白） */
-  --c-ink-900: #16130f;
-  --c-ink-800: #1a1a17;
-  --c-ink-600: #52514b;
-  --c-ink-500: #6e6c64;
-  --c-ink-450: #8a887e;
-  --c-ink-400: #a3a196; /* 文字には使わない（紙白に対して 2.5:1） */
-  --c-ink-300: #cfcdc4;
-  --c-ink-200: #e6e4dd;
-  --c-ink-150: #ecebe4;
-  --c-ink-100: #f3f2ec;
-  --c-paper:   #faf9f6;
+  /* light で使うグレー */
   --c-white:   #ffffff;
+  --c-gray-fb: #fbfbfb;
+  --c-gray-f4: #f4f4f4;
+  --c-gray-eb: #ebebeb;
+  --c-gray-e4: #e4e4e4;
+  --c-gray-d9: #d9d9d9;
+  --c-gray-bd: #bdbdbd;
+  --c-gray-9c: #9c9c9c;
+  --c-gray-80: #808080;
+  --c-gray-66: #666666;
+  --c-gray-4a: #4a4a4a;
+  --c-gray-11: #111111;
 
-  /* ダーク面（GitHub系の近黒） */
-  --c-dk-bg:      #0d1117;
-  --c-dk-surf-1:  #161b22;
-  --c-dk-surf-2:  #21262d;
-  --c-dk-border:         #262c36;
-  --c-dk-border-strong:  #363c46;
-  --c-dk-border-control: #6e7681;
-  --c-dk-text-1:  #e6edf3;
-  --c-dk-text-2:  #a9b1ba;
-  --c-dk-text-3:  #8b949e;
+  /* dark で使うグレー */
+  --c-gray-f0: #f0f0f0;
+  --c-gray-b4: #b4b4b4;
+  --c-gray-9a: #9a9a9a;
+  --c-gray-7a: #7a7a7a;
+  --c-gray-3d: #3d3d3d;
+  --c-gray-2e: #2e2e2e;
+  --c-gray-29: #292929;
+  --c-gray-22: #222222;
+  --c-gray-1e: #1e1e1e;
+  --c-gray-14: #141414;
+  --c-gray-10: #101010;
 
-  /* アクセント */
-  --c-slate:  #2f4858; /* light の差し色 */
-  --c-teal:   #2dd4bf; /* dark の差し色 */
-
-  /* 状態（light 用 / dark 用） */
+  /* 状態（light 用 / dark 用）。UI で色を持つのはここだけ */
   --c-red:      #b3261e;
   --c-amber:    #8a5a00;
   --c-green:    #1f6f43;
@@ -67,19 +68,21 @@
  * ============================================================ */
 :root {
   /* タイポ。欧文は Plex、和文は Plex Sans JP に落とす */
-  --font-sans:  "IBM Plex Sans", "IBM Plex Sans JP", system-ui, sans-serif;
-  --font-mono:  "IBM Plex Mono", "IBM Plex Sans JP", ui-monospace, monospace;
-  --font-serif: "IBM Plex Serif", "IBM Plex Sans JP", Georgia, serif;
+  --font-sans: "IBM Plex Sans", "IBM Plex Sans JP", system-ui, sans-serif;
+  --font-data: "IBM Plex Sans Condensed", "IBM Plex Sans JP", system-ui, sans-serif; /* 目盛・凡例の数値・読み取り値 */
+  --font-mono: "IBM Plex Mono", "IBM Plex Sans JP", ui-monospace, monospace; /* コードだけ */
 
-  --text-xs:  12px;
-  --text-sm:  13px;
-  --text-md:  14px;
-  --text-base:16px;
-  --text-lg:  18px;
-  --text-xl:  22px;
+  /* rem で持つ（利用者がブラウザで設定した文字サイズに追従する）。コメントは既定の 16px のときの大きさ */
+  --text-map:  0.75rem;  /* 12px。図郭の目盛・縮尺・出典の3つだけ */
+  --text-sm:   0.875rem; /* 14px */
+  --text-base: 1rem;     /* 16px */
+  --text-lg:   1.125rem; /* 18px */
+  --text-xl:   1.375rem; /* 22px */
 
   --weight-regular: 400;
   --weight-medium:  500;
+
+  --tracking-body: 0.02em;
 
   /* スペーシング（4px基準） */
   --space-1: 4px;
@@ -90,20 +93,17 @@
   --space-8: 32px;
   --space-12: 48px;
 
-  /* 形状 */
-  --radius-sm:   4px;
-  --radius-md:   8px;
-  --radius-card: 12px;
-  --border-hairline: 0.5px;
-  --border-solid:    1px;
+  /* 形状。面は直角。角丸は操作部品だけ */
+  --radius-control: 3px;
+  --border-width:   1px;
 
-  /* フォーカスリング */
+  /* フォーカスリング。インクの輪郭の外に、地の色を同じ幅で重ねる */
   --focus-ring-width:  2px;
   --focus-ring-offset: 2px;
 
   /* 重なり順（アプリ全体。地図コンテナの内側は別の重なりに閉じる） */
   --z-base:        0;
-  --z-map-control: 10; /* 地図上のボタン・凡例・スケール */
+  --z-map-control: 10; /* 地図上のボタン・スケール */
   --z-panel:       20; /* サイドパネル・ドロワー */
   --z-popup:       30; /* ポップアップ・ツールチップ・メニュー */
   --z-modal:       40;
@@ -123,17 +123,18 @@
 }
 
 /* ============================================================
- * データ可視化パレット（UIとは別枠）
- * 正本は src/palettes.ts と同じ値（npm run check で一致を検証）。
+ * データの配色（UIとは別枠）
+ * 正本は src/palettes.ts。ここは一部の値の写し（npm run check で一致を検証）。
  * 地図レイヤ（MapLibre）は CSS 変数を読めないので、そちらは palettes.ts を使う。
  * ここは HTML の凡例など、CSS だけで色を当てたい場面用。
+ * 階級のある配色（気象庁など）は palettes.ts だけにある。
  * ============================================================ */
 :root {
-  /* sequential: viridis の5停止（連続値：降水強度・標高・密度など） */
+  /* sequential: viridis の5停止（暗 → 明）。件数・密度など慣例のない連続値 */
   --data-seq-0: #440154;
   --data-seq-1: #3b528b;
-  --data-seq-2: #21908c;
-  --data-seq-3: #5dc863;
+  --data-seq-2: #21918c;
+  --data-seq-3: #5ec962;
   --data-seq-4: #fde725;
 
   /* categorical: 5色まで。背景ごとに別の組（どちらも色覚シミュレーションで検証済み） */
@@ -143,10 +144,10 @@
   --data-cat-4: light-dark(#332288, #f0e442);
   --data-cat-5: light-dark(#882255, #d55e00);
 
-  /* diverging: 中心からの偏差（平年差・増減など）。中点は背景に沈む色 */
-  --data-div-neg: light-dark(#2166ac, #67a9cf);
-  --data-div-mid: light-dark(#f7f7f7, #30363d);
-  --data-div-pos: light-dark(#b2182b, #ef8a62);
+  /* diverging: RdYlBu の11階級のうち 2番目・中央・10番目。減少が青、増加が赤 */
+  --data-div-neg: #4575b4;
+  --data-div-mid: #ffffbf;
+  --data-div-pos: #d73027;
 }
 
 /* ============================================================
@@ -156,43 +157,43 @@
 :root {
   color-scheme: light;
 
-  --page:            light-dark(var(--c-paper), var(--c-dk-bg));
-  --surface:         light-dark(var(--c-white), var(--c-dk-surf-1));
-  --surface-2:       light-dark(var(--c-ink-100), var(--c-dk-surf-2)); /* 二次面。light は一段暗く、dark は一段明るい */
+  --page:            light-dark(var(--c-gray-f4), var(--c-gray-14));
+  --surface:         light-dark(var(--c-white), var(--c-gray-1e));
+  --surface-2:       light-dark(var(--c-gray-eb), var(--c-gray-29)); /* 二次面。light は一段暗く、dark は一段明るい */
 
-  --text-primary:    light-dark(var(--c-ink-800), var(--c-dk-text-1));
-  --text-secondary:  light-dark(var(--c-ink-600), var(--c-dk-text-2));
-  --text-muted:      light-dark(var(--c-ink-500), var(--c-dk-text-3));
+  --text-primary:    light-dark(var(--c-gray-11), var(--c-gray-f0)); /* インク。図郭・選択の輪郭・押されたボタンにも使う */
+  --text-secondary:  light-dark(var(--c-gray-4a), var(--c-gray-b4));
+  --text-muted:      light-dark(var(--c-gray-66), var(--c-gray-9a));
 
-  --border:          light-dark(var(--c-ink-200), var(--c-dk-border)); /* 装飾の境界（カード・区切り） */
-  --border-strong:   light-dark(var(--c-ink-300), var(--c-dk-border-strong));
-  --border-control:  light-dark(var(--c-ink-450), var(--c-dk-border-control)); /* 枠が唯一の手がかりになる部品 */
-  --divider:         light-dark(var(--c-ink-150), var(--c-dk-border));
+  --border:          light-dark(var(--c-gray-d9), var(--c-gray-2e)); /* 装飾の境界 */
+  --border-strong:   light-dark(var(--c-gray-bd), var(--c-gray-3d));
+  --border-control:  light-dark(var(--c-gray-80), var(--c-gray-7a)); /* 枠が唯一の手がかりになる部品 */
+  --divider:         var(--border);
 
-  --accent:          light-dark(var(--c-slate), var(--c-teal));
-  --accent-text:     light-dark(var(--c-white), var(--c-dk-bg));
-
-  --focus-ring:      var(--accent);
+  --focus-ring:      var(--text-primary);
+  --focus-ring-halo: var(--page);
 
   /* 状態。色だけで伝えない（アイコンか文言を必ず添える） */
   --status-error:    light-dark(var(--c-red), var(--c-dk-red));
   --status-warning:  light-dark(var(--c-amber), var(--c-dk-amber));
   --status-success:  light-dark(var(--c-green), var(--c-dk-green));
 
-  /* 地図の上に浮く面（凡例・パネル・ポップアップ）。影を使わないので不透明＋1px の枠で分ける */
-  --map-overlay-surface:      var(--surface);
-  --map-overlay-border:       var(--border-strong);
-  --map-overlay-border-width: var(--border-solid);
+  /* 基図。無彩色にして、色をデータのために空けておく */
+  --map-water:       light-dark(var(--c-gray-e4), var(--c-gray-10));
+  --map-land:        light-dark(var(--c-gray-fb), var(--c-gray-22));
+  --map-coast:       light-dark(var(--c-gray-9c), var(--c-gray-4a));
+  --map-casing:      var(--map-land);     /* ベクターの縁取り */
+  --map-selection:   var(--text-primary); /* 選択したフィーチャの輪郭 */
 
-  --border-width:    var(--border-hairline);
+  /* やむを得ず地図の上に浮かべる面。不透明 + 3:1 の枠で分ける */
+  --map-overlay-surface: var(--surface);
+  --map-overlay-border:  var(--border-control);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --border-width: var(--border-solid);
 }
 
 [data-theme="light"] {
   color-scheme: light;
-  --border-width: var(--border-hairline);
 }

@@ -1,7 +1,8 @@
 // tokens.css と src/palettes.ts を検証する。依存なし。
-//   1. セマンティック層に生の hex が無い
+//   1. セマンティック層に生の hex が無い。UI のグレー（--c-gray-*）が無彩色で、名前と値が合っている
 //   2. コントラスト基準（DESIGN-SYSTEM.md §2, §3）を light / dark の両方で満たす
 //   3. tokens.css の --data-* が palettes.ts と一致する
+//   4. 連続の配色が、小さい値を背景に近い側にする向きになっている
 // 実行: npm run check
 import { readFileSync } from "node:fs";
 import { categorical, diverging, sequential } from "../src/palettes.ts";
@@ -60,6 +61,11 @@ for (const [name, value] of decls) {
   if (name.startsWith("--c-") || name.startsWith("--data-")) continue;
   if (value.includes("#")) fail(`${name} has a raw hex value (${value}); go through --c-*`);
 }
+for (const [name, value] of decls) {
+  if (!name.startsWith("--c-gray-")) continue;
+  const pair = name.slice("--c-gray-".length);
+  if (value.toLowerCase() !== `#${pair.repeat(3)}`) fail(`${name} should be #${pair.repeat(3)} but is ${value}`);
+}
 
 // 2. コントラスト
 const SURFACES = ["--page", "--surface", "--surface-2"];
@@ -67,7 +73,6 @@ const ON_SURFACES = [
   ["--text-primary", 4.5],
   ["--text-secondary", 4.5],
   ["--text-muted", 4.5],
-  ["--accent", 4.5],
   ["--status-error", 4.5],
   ["--status-warning", 4.5],
   ["--status-success", 4.5],
@@ -86,13 +91,25 @@ for (const theme of THEMES) {
       requireContrast(`[${theme}] ${token} on ${surface}`, resolve(token, theme), resolve(surface, theme), min);
     }
   }
-  requireContrast(`[${theme}] --accent-text on --accent`, resolve("--accent-text", theme), resolve("--accent", theme), 4.5);
+  // 押されたボタン: インクの塗りに地の色の文字
+  requireContrast(`[${theme}] --page on --text-primary`, resolve("--page", theme), resolve("--text-primary", theme), 4.5);
+  requireContrast(`[${theme}] --map-overlay-border on --map-land`, resolve("--map-overlay-border", theme), resolve("--map-land", theme), 3);
 
-  // データ色は地図の背景（--page）に対して 3:1。発散の中点は対象外（沈ませる色）
-  const page = resolve("--page", theme);
-  sequential[theme].forEach((c, i) => requireContrast(`[${theme}] sequential.${theme}[${i}]`, c, page, 3));
-  categorical[theme].forEach((c, i) => requireContrast(`[${theme}] categorical.${theme}[${i}]`, c, page, 3));
-  for (const i of [0, 2]) requireContrast(`[${theme}] diverging.${theme}[${i}]`, diverging[theme][i], page, 3);
+  // カテゴリ色はページと地図の陸に対して 3:1。
+  // 水域は対象外（light の緑が 2.7:1。縁取りで補う。DESIGN-SYSTEM.md §3）
+  for (const ground of ["--page", "--map-land"]) {
+    categorical[theme].forEach((c, i) =>
+      requireContrast(`[${theme}] categorical.${theme}[${i}] on ${ground}`, c, resolve(ground, theme), 3),
+    );
+  }
+
+  // 4. 連続の配色は、小さい値が地の色に近い側
+  const land = luminance(resolve("--map-land", theme));
+  const ramp = sequential[theme];
+  const distance = (c) => Math.abs(luminance(c) - land);
+  if (distance(ramp[0]) >= distance(ramp[ramp.length - 1])) {
+    fail(`[${theme}] sequential.${theme} must start at the end nearest the map ground`);
+  }
 }
 
 // 3. tokens.css の --data-* が palettes.ts と一致する
@@ -104,7 +121,7 @@ function requireSame(name, theme, expected) {
 for (const theme of THEMES) {
   [0, 2, 4, 6, 8].forEach((stop, i) => requireSame(`--data-seq-${i}`, theme, sequential.full[stop]));
   categorical[theme].forEach((c, i) => requireSame(`--data-cat-${i + 1}`, theme, c));
-  ["neg", "mid", "pos"].forEach((key, i) => requireSame(`--data-div-${key}`, theme, diverging[theme][i]));
+  [["neg", 1], ["mid", 5], ["pos", 9]].forEach(([key, i]) => requireSame(`--data-div-${key}`, theme, diverging[i]));
 }
 const cssCatCount = [...decls.keys()].filter((n) => n.startsWith("--data-cat-")).length;
 if (cssCatCount !== categorical.light.length) {

@@ -10,9 +10,25 @@ body {
   font-size: var(--text-base);
   font-weight: var(--weight-regular);
   line-height: 1.65;
+  letter-spacing: var(--tracking-body);
 }
 
+/*
+ * テーマを切り替える要素では、地と文字の色を必ず当て直す。
+ * color は継承されるとき light / dark のどちらかに確定した値で渡るので、
+ * 当て直さないと、dark の領域の中に light の文字色が残る（DESIGN-SYSTEM.md §1）。
+ * accent-color はチェックボックスやスライダーなど標準の部品の色。インクにして無彩色に保つ。
+ */
+:root,
+[data-theme] {
+  background-color: var(--page);
+  color: var(--text-primary);
+  accent-color: var(--text-primary);
+}
+
+/* インクの輪郭 + その外側に地の色。どの面の上でも見える（DESIGN-SYSTEM.md §5） */
 :focus-visible {
   outline: var(--focus-ring-width) solid var(--focus-ring);
   outline-offset: var(--focus-ring-offset);
+  box-shadow: 0 0 0 calc(var(--focus-ring-offset) + var(--focus-ring-width) * 2) var(--focus-ring-halo);
 }

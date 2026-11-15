@@ -1,8 +1,8 @@
 {
   "name": "@wing787/geo-ui",
   "private": true,
-  "version": "0.2.0",
-  "description": "Shared design system: tokens and data palettes for the portfolio and geospatial apps",
+  "version": "0.3.0",
+  "description": "Shared design system: tokens and data colour palettes for the portfolio and geospatial apps",
   "type": "module",
   "license": "MIT",
   "files": [
