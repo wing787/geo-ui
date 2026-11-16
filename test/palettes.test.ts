@@ -101,7 +101,7 @@ test("colorStops spreads colors evenly and keeps both ends exact", () => {
     [80, "#ffffff"],
   ]);
   const stops = colorStops(sequential.full, -5, 35);
-  assert.equal(stops[0][0], -5);
+  assert.equal(stops[0]?.[0], -5);
   assert.equal(stops.at(-1)?.[0], 35);
 });
 

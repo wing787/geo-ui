@@ -92,12 +92,18 @@ Next.js は `next.config` の `transpilePackages` に `@wing787/geo-ui` を足�
 ## 開発
 
 ```sh
-npm run check   # コントラスト基準と、tokens.css / palettes.ts の一致を検証
-npm test        # palettes のテスト
-npm run preview # 見た目の確認用ページ preview.html を生成（ブラウザで開く。コミットしない）
+npm ci            # 型チェック用の TypeScript を入れる（開発時だけ。下流には入らない）
+npm run typecheck # src と test の型チェック
+npm run check     # コントラスト基準と、tokens.css / palettes.ts の一致を検証
+npm test          # palettes のテスト
+npm run preview   # 見た目の確認用ページ preview.html を生成（ブラウザで開く。コミットしない）
 ```
 
-依存パッケージは無い。Node.js 22.6 以降が要る（TypeScript を直接実行するため）。
+実行時の依存パッケージは無い。開発用に TypeScript と Node.js の型定義だけを入れている（型チェック用）。
+Node.js 22.6 以降が要る（TypeScript を直接実行するため）。
+
+`src/` は TypeScript のソースのまま配るので、下流のアプリの設定で型チェックされる。
+厳しい設定（`noUncheckedIndexedAccess`、`erasableSyntaxOnly`、`verbatimModuleSyntax`）でも通るように、`tsconfig.json` でそれらを有効にしている。
 
 ## 文書
 

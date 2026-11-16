@@ -23,6 +23,11 @@
   "scripts": {
     "check": "node --experimental-strip-types scripts/check-tokens.mjs",
     "preview": "node --experimental-strip-types scripts/build-preview.mjs",
-    "test": "node --experimental-strip-types --test test/palettes.test.ts"
+    "test": "node --experimental-strip-types --test test/palettes.test.ts",
+    "typecheck": "tsc -p ."
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "typescript": "7.0.2"
   }
 }

@@ -184,11 +184,17 @@ export function stepArgs(palette: Pick<ClassedPalette, "edges" | "colors">): Arr
   if (colors.length !== edges.length + 1) {
     throw new RangeError("colors must have exactly one more entry than edges");
   }
-  if (edges.some((edge, i) => i > 0 && edge <= edges[i - 1])) {
-    throw new RangeError("edges must be strictly increasing");
+  let previous = Number.NEGATIVE_INFINITY;
+  for (const edge of edges) {
+    if (edge <= previous) throw new RangeError("edges must be strictly increasing");
+    previous = edge;
   }
-  const args: Array<number | Hex> = [colors[0]];
-  edges.forEach((edge, i) => args.push(edge, colors[i + 1]));
+  // 色と境界を交互に並べる: [色0, 境界0, 色1, 境界1, …, 色n]
+  const args: Array<number | Hex> = [];
+  colors.forEach((color, i) => {
+    if (i > 0) args.push(edges[i - 1] as number); // 長さは上で確認済み
+    args.push(color);
+  });
   return args;
 }
 
