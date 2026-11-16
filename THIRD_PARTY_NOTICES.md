@@ -12,9 +12,9 @@
 | Hypsometric Tint | `convention.hypsometric` | GeoPalettes（Dominic Royé） | CC BY 4.0。表示が必要 | README を読んだ。リポジトリに LICENSE ファイルは無い |
 | RdYlBu | `diverging` | ColorBrewer（Cynthia Brewer, Mark Harrower, The Pennsylvania State University） | Apache License 2.0 | 読んだ |
 | grayC | `image.grayC` | Scientific colour maps（Fabio Crameri） | MIT | 読んだ |
-| viridis | `sequential` | matplotlib（Stéfan van der Walt, Nathaniel Smith） | CC0 と理解している | 読んでいない |
-| turbo | `optional.turbo` | Google（Anton Mikhailov）。値は matplotlib から取った | Apache License 2.0 と理解している | 読んでいない |
-| カテゴリ色 | `categorical` | Okabe-Ito（岡部正隆、伊藤啓）、Paul Tol | 色の値。特別な条件は把握していない | 読んでいない |
+| viridis | `sequential` | Nathaniel J. Smith, Stéfan van der Walt, Eric Firing（matplotlib） | CC0。条件なし | 読んだ |
+| turbo | `optional.turbo` | Google LLC（作者 Anton Mikhailov）。値は matplotlib から取った | Apache License 2.0 | 原典の冒頭を読んだ。matplotlib 側には記載が無い |
+| カテゴリ色 | `categorical` | Okabe-Ito（岡部正隆、伊藤啓）、Paul Tol | 配布元に利用条件の記載が無い | 読んだ。Okabe-Ito の値は照合できていない |
 
 ## 気象庁
 
@@ -79,6 +79,37 @@ grayC は Fabio Crameri の Scientific colour maps の配色。値は Python の
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
+
+## viridis
+
+viridis は Nathaniel J. Smith、Stéfan van der Walt、Eric Firing が matplotlib のために作った配色。
+配布元（https://github.com/BIDS/colormap/blob/master/colormaps.py ）の冒頭に、CC0（パブリックドメインへの提供）で公開する、
+法的な制限は課さないが、使うときはクレジットしてもらえるとありがたい、と書かれている。
+値は matplotlib の256色から等間隔に9色を取った。
+
+## turbo
+
+turbo は Google の Anton Mikhailov による配色。原典（https://gist.github.com/mikhailov-work/ee72ba4191942acecc03fe6da94fc73f ）の冒頭の表示は次のとおり。
+
+    Copyright 2019 Google LLC.
+    SPDX-License-Identifier: Apache-2.0
+    Author: Anton Mikhailov
+
+Apache License 2.0 の全文: http://www.apache.org/licenses/LICENSE-2.0
+
+このリポジトリで加えた変更: 値は matplotlib の256色から等間隔に17色を取り、16進数に直した。
+matplotlib の該当ファイルには、turbo の作者やライセンスの記載が見当たらなかった（冒頭は自分で読み、残りは要約で確認した）。
+
+## カテゴリ色
+
+- Okabe-Ito: 岡部正隆、伊藤啓「Color Universal Design (CUD) - How to make figures and presentations that are friendly to Colorblind people」
+  （https://jfly.uni-koeln.de/color/ ）の配色。このページには、配色そのものの利用条件は書かれていない
+  （配布資料について、授業やセミナーで自由に使ってよい、出典として両氏の名前を挙げてほしい、とある）。
+  ページでは配色が画像で示されていて、色の値を文字で照合できなかった。`categorical` の値は、広く流通している値である。
+- Paul Tol: 「Colour schemes」（https://sronpersonalpages.nl/~pault/ ）の muted から #332288 と #882255 を取った。値はページの記載と一致した。
+  配色の利用条件は、ページに書かれていない。
+
+どちらも数個の色の値で、作者が広く使われることを意図して公開しているものだが、明示の許諾ではない。出典としてここに名前を挙げている。
 
 ## 参考にした文書
 

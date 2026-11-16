@@ -260,11 +260,12 @@ geo-ui リポジトリの正本。全アプリの見た目はこの文書と `to
 | 配色 | 出典 | 条件 |
 |---|---|---|
 | 気象庁の配色 | 気象庁ホームページ「気象情報の配色に関する設定指針」、降水ナウキャストの凡例 | 公共データ利用規約（第1.0版）。「出典：気象庁ホームページ（URL）」と表示する。加工した場合はその旨も書く |
-| viridis、turbo | matplotlib（turbo の原典は Google、Apache 2.0） | 表示は任意 |
+| viridis | Nathaniel J. Smith、Stéfan van der Walt、Eric Firing（matplotlib） | CC0。表示は任意（作者は表示を歓迎している） |
+| turbo | Google（Anton Mikhailov）。値は matplotlib から取った | Apache 2.0。地図への表示は不要。著作権表示は `THIRD_PARTY_NOTICES.md` にある |
 | RdYlBu | ColorBrewer（Cynthia Brewer ほか） | Apache 2.0 |
 | grayC | Scientific colour maps（Fabio Crameri） | MIT。論文での引用が推奨されている |
 | Hypsometric Tint | GeoPalettes（Dominic Royé） | CC BY 4.0。表示が必要 |
-| カテゴリ色 | Okabe-Ito、Paul Tol | 表示は任意 |
+| カテゴリ色 | Okabe-Ito、Paul Tol | 配布元に利用条件の記載はない。表示は任意 |
 
 表示が必要なもの（気象庁、GeoPalettes）は、その配色を使った地図の出典欄に書く。文は `attribution` にある。
 暗い背景で降水の最初の階級を省いた地図には、加工した旨（`attribution.jmaRainDarkEdit`）もあわせて書く。
