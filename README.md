@@ -13,7 +13,7 @@
 git 依存としてインストールする（npm には公開しない）。`#main` ではなくタグを指定する。
 
 ```sh
-npm install github:wing787/geo-ui#v0.3.1
+npm install github:wing787/geo-ui#v0.3.2
 ```
 
 ロックファイルをコミットし、CI では `npm ci` を使う（解決されたコミットが固定される）。
